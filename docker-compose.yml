@@ -1,0 +1,27 @@
+services:
+  openradio:
+    build: .
+    container_name: openradio_all_in_one
+    restart: unless-stopped
+    ports:
+      # Web (nginx) and stats API (flask)
+      - "127.0.0.1:5880:80"
+      - "127.0.0.1:8090:8080"
+      # SRT input (public)
+      - "${SRT_PORT:-9000}:${SRT_PORT:-9000}/udp"
+    environment:
+      # FFmpeg settings
+      SRT_PORT: "${SRT_PORT:-9000}"
+      SRT_STREAMID: "${SRT_STREAMID:-live}"
+      SRT_PASSPHRASE: "${SRT_PASSPHRASE:-password}"
+      HLS_TIME: "${HLS_TIME:-4}"
+      HLS_LIST: "${HLS_LIST:-10}"
+      # Stats App settings (Overrides are handled in supervisord, 
+      # but you can pass overrides here if needed)
+      SEGMENT_SECONDS: "4"
+      WINDOW_SECONDS: "60"
+    volumes:
+      # Optional: Persist logs if you want
+      - ./logs:/var/log/nginx
+      # Optional: Persist HLS segments (useful for debugging, not strictly necessary for live)
+      - ./hls:/hls

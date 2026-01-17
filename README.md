@@ -1,93 +1,180 @@
-# orl
+# openradio.live — All-in-One Live Audio Stack
 
+A small, self-contained live audio streaming stack built around SRT, HLS, Nginx, and FFmpeg, with a real-time dashboard and a simple web listener.
 
+Run it on a VPS or locally. Very low RAM usage. 
 
-## Getting started
+---
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+## What This Is
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+This project takes a live audio source and turns it into a public HLS stream.
 
-## Add your files
+Audio comes in over SRT.
+FFmpeg packages it as HLS.
+Nginx serves the stream, a web player, and a dashboard.
+A Python service reads real access logs and produces live stats.
 
-* [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-* [Add files using the command line](https://docs.gitlab.com/topics/git/add_files/#add-files-to-a-git-repository) or push an existing Git repository with the following command:
+Everything runs together in one Docker container.
+
+---
+
+## Features
+
+* Public SRT ingest (UDP)
+* HLS output for broad device compatibility
+* Web-based listener (PWA-style)
+* Live dashboard with real metrics
+* Listener counts based on actual segment requests
+* New vs returning listener detection
+* Estimated live latency
+* No client-side tracking
+* One-command Docker deployment
+
+---
+
+## How It Works (Quick Overview)
+
+Audio is pushed to the server using SRT.
+FFmpeg listens for that stream and writes HLS segments.
+Nginx serves those segments and logs every request.
+The stats service reads the logs and calculates metrics.
+The dashboard pulls live JSON from the stats API.
+
+No polling from the player.
+No embedded analytics scripts.
+
+---
+
+## Repo Layout
+
+* `docker-compose.yml`
+  Single-service deployment.
+
+* `Dockerfile`
+  Builds Nginx, FFmpeg, Supervisor, and the stats app.
+
+* `web/`
+  The listener web app.
+
+* `dashboard/`
+  The live monitoring UI.
+
+* `stats/`
+  Python service that analyzes access logs.
+
+* `streamer/`
+  Local tools for sending audio to the server.
+
+---
+
+## Getting It Running
+
+Build and start everything:
 
 ```
-cd existing_repo
-git remote add origin https://gitlab.com/mrhappynice/orl.git
-git branch -M main
-git push -uf origin main
+docker compose up -d --build
 ```
 
-## Integrate with your tools
+Defaults:
 
-* [Set up project integrations](https://gitlab.com/mrhappynice/orl/-/settings/integrations)
+* Web listener: [http://localhost:5880](http://localhost:5880)
+* Dashboard: [http://localhost:5880/dashboard/](http://localhost:5880/dashboard/)
+* Stats API: [http://localhost:8090/api/stats](http://localhost:8090/api/stats)
+* SRT ingest: UDP port 9000
 
-## Collaborate with your team
+---
 
-* [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-* [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-* [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-* [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-* [Set auto-merge](https://docs.gitlab.com/user/project/merge_requests/auto_merge/)
+## Sending Audio
 
-## Test and Deploy
+You can stream audio in several ways.
 
-Use the built-in continuous integration in GitLab.
+Use a microphone.
+Stream desktop audio.
+Loop a local playlist.
+Mix multiple inputs together.
 
-* [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/)
-* [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-* [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-* [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-* [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+The `streamer/` folder includes:
 
-***
+* simple shell scripts
+* a Python playlist streamer
+* interactive TUI stream app
 
-# Editing this README
+These tools are optional.
+Any SRT-capable sender will work. e.g.: OBS Studio, mobile apps, etc.
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
+---
 
-## Suggestions for a good README
+## The Web Listener
 
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+The listener is intentionally minimal.
 
-## Name
-Choose a self-explaining name for your project.
+It loads fast.
+It works on mobile and desktop.
+It can be installed as a PWA.
+It avoids frameworks and heavy JS.
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+You’re expected to customize it.
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+---
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+## The Dashboard
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+The dashboard shows what is happening on the server.
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+Listener counts are based on HLS segment requests.
+Stats come from Nginx logs
+You can see:
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+* active listeners (short and long windows)
+* new vs returning listeners
+* request rates
+* error rates
+* estimated latency
+* client types and user agents
+* live history graphs
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+---
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+## Why This Exists
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+This project is about keeping things understandable.
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+You should be able to:
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+* see how audio moves through the system
+* trust the numbers you’re looking at
+* change one part without breaking everything
+
+It works as a real stream, a demo platform, or a learning project.
+
+---
+
+## Customization
+
+This is meant to be modified.
+
+Replace the web UI.
+Change HLS settings.
+Add auth to the dashboard.
+Record or archive streams.
+Run multiple instances for multiple channels.
+
+Nothing here is locked in.
+
+---
+
+## HTTPS and Domains
+
+See `set-domains.md` for notes on Nginx proxy and certbot setup
+
+---
 
 ## License
-For open source projects, say how it is licensed.
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+Personal use.
+Use it.
+Fork it.
+Build something better on top of it.
+
+

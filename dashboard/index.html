@@ -1,0 +1,861 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta
+            name="viewport"
+            content="width=device-width,initial-scale=1,viewport-fit=cover"
+        />
+        <meta name="theme-color" content="#0b0b0f" />
+        <title>openradio.live Dashboard</title>
+
+        <style>
+            :root {
+                color-scheme: dark;
+            }
+            * {
+                box-sizing: border-box;
+            }
+            body {
+                margin: 0;
+                font-family:
+                    system-ui,
+                    -apple-system,
+                    Segoe UI,
+                    Roboto,
+                    Arial,
+                    sans-serif;
+                background: #0b0b0f;
+                color: #eaeaf0;
+            }
+            .wrap {
+                max-width: 1100px;
+                margin: 0 auto;
+                padding: 18px;
+                display: grid;
+                gap: 14px;
+            }
+            header {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                justify-content: space-between;
+                gap: 12px;
+            }
+            h1 {
+                margin: 0;
+                font-size: 18px;
+                letter-spacing: 0.2px;
+                font-weight: 650;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+            .pill {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                padding: 7px 10px;
+                border-radius: 999px;
+                background: rgba(255, 255, 255, 0.06);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                font-size: 12px;
+            }
+            .dot {
+                width: 10px;
+                height: 10px;
+                border-radius: 50%;
+                background: #ff5a5a;
+                box-shadow: 0 0 0 4px rgba(255, 90, 90, 0.14);
+            }
+            .dot.ok {
+                background: #35d07f;
+                box-shadow: 0 0 0 4px rgba(53, 208, 127, 0.14);
+            }
+
+            .grid {
+                display: grid;
+                gap: 14px;
+                grid-template-columns: repeat(12, 1fr);
+            }
+            .card {
+                grid-column: span 12;
+                background: #141422;
+                border: 1px solid rgba(255, 255, 255, 0.08);
+                border-radius: 16px;
+                padding: 14px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+            }
+            @media (min-width: 900px) {
+                .span-4 {
+                    grid-column: span 4;
+                }
+                .span-6 {
+                    grid-column: span 6;
+                }
+                .span-8 {
+                    grid-column: span 8;
+                }
+            }
+
+            .kpiRow {
+                display: grid;
+                gap: 12px;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+            @media (min-width: 900px) {
+                .kpiRow {
+                    grid-template-columns: repeat(4, minmax(0, 1fr));
+                }
+            }
+
+            .kpi {
+                background: rgba(255, 255, 255, 0.04);
+                border: 1px solid rgba(255, 255, 255, 0.08);
+                border-radius: 14px;
+                padding: 12px;
+            }
+            .kpi .label {
+                font-size: 12px;
+                color: rgba(234, 234, 240, 0.7);
+                margin-bottom: 8px;
+                display: flex;
+                justify-content: space-between;
+                gap: 10px;
+            }
+            .kpi .value {
+                font-size: 22px;
+                font-weight: 720;
+                letter-spacing: 0.2px;
+            }
+            .subtle {
+                font-size: 12px;
+                color: rgba(234, 234, 240, 0.68);
+            }
+
+            .row {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+                align-items: center;
+                justify-content: space-between;
+            }
+            .btnRow {
+                display: flex;
+                gap: 10px;
+                flex-wrap: wrap;
+            }
+            button,
+            a.button {
+                background: #1e1e33;
+                color: #eaeaf0;
+                border: 1px solid rgba(255, 255, 255, 0.12);
+                border-radius: 12px;
+                padding: 10px 12px;
+                font-size: 13px;
+                text-decoration: none;
+                cursor: pointer;
+                user-select: none;
+            }
+            button:hover,
+            a.button:hover {
+                filter: brightness(1.08);
+            }
+            button:active,
+            a.button:active {
+                transform: translateY(1px);
+            }
+
+            .mono {
+                font-family:
+                    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+                    "Liberation Mono", "Courier New", monospace;
+            }
+            .small {
+                font-size: 12px;
+                opacity: 0.8;
+            }
+
+            .sparkWrap {
+                display: grid;
+                gap: 12px;
+            }
+            .sparkCard {
+                background: rgba(255, 255, 255, 0.04);
+                border: 1px solid rgba(255, 255, 255, 0.08);
+                border-radius: 14px;
+                padding: 12px;
+            }
+            .sparkTitle {
+                font-size: 12px;
+                color: rgba(234, 234, 240, 0.7);
+                margin: 0 0 10px;
+                display: flex;
+                justify-content: space-between;
+                align-items: baseline;
+                gap: 10px;
+            }
+            canvas {
+                width: 100%;
+                height: 80px;
+                display: block;
+                border-radius: 10px;
+                background: rgba(0, 0, 0, 0.18);
+                border: 1px solid rgba(255, 255, 255, 0.06);
+            }
+
+            .errorBox {
+                display: none;
+                background: rgba(255, 90, 90, 0.1);
+                border: 1px solid rgba(255, 90, 90, 0.25);
+                color: rgba(255, 200, 200, 0.95);
+                border-radius: 14px;
+                padding: 12px;
+                font-size: 12px;
+            }
+            .errorBox.show {
+                display: block;
+            }
+
+            .clientList {
+                display: grid;
+                gap: 6px;
+                font-size: 12px;
+            }
+            .clientItem {
+                display: flex;
+                justify-content: space-between;
+                gap: 10px;
+            }
+
+            .footer {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+                justify-content: space-between;
+                align-items: center;
+                font-size: 12px;
+                color: rgba(234, 234, 240, 0.62);
+                padding: 4px 2px;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="wrap">
+            <header>
+                <h1>
+                    <span>openradio.live Dashboard</span>
+                    <span class="pill"
+                        ><span id="dot" class="dot"></span
+                        ><span id="liveText">Offline</span></span
+                    >
+                </h1>
+
+                <div class="btnRow">
+                    <a
+                        class="button"
+                        href="/hls/live.m3u8"
+                        target="_blank"
+                        rel="noreferrer"
+                        >Your HLS app</a
+                    >
+                    <a class="button" href="/" target="_blank" rel="noreferrer"
+                        >Listen</a
+                    >
+                    <button id="btnPause">Pause</button>
+                    <button id="btnClear">Clear history</button>
+                </div>
+            </header>
+
+            <div id="errorBox" class="errorBox"></div>
+
+            <div class="card">
+                <div class="row" style="margin-bottom: 12px">
+                    <div class="subtle">
+                        Stats endpoint: <span class="mono">/api/stats</span>
+                    </div>
+                    <div class="subtle">
+                        Refresh: <span class="mono" id="refreshMs">2000</span>ms
+                        | Last update:
+                        <span class="mono" id="lastUpdate">--</span>
+                    </div>
+                </div>
+
+                <div class="kpiRow" style="margin-bottom: 12px">
+                    <div class="kpi">
+                        <div class="label">
+                            <span>Active listeners (1m)</span>
+                            <span class="mono small" id="listenersDelta"
+                                >--</span
+                            >
+                        </div>
+                        <div class="value" id="listenersNow">0</div>
+                    </div>
+
+                    <div class="kpi">
+                        <div class="label">
+                            <span>Active listeners (5m)</span>
+                            <span class="mono small" id="listeners5mNote"
+                                >rolling</span
+                            >
+                        </div>
+                        <div class="value" id="listeners5m">0</div>
+                    </div>
+
+                    <div class="kpi">
+                        <div class="label">
+                            <span>New / returning (1m)</span>
+                            <span class="mono small" id="newReturningNote"
+                                >listeners</span
+                            >
+                        </div>
+                        <div class="value" id="newReturning">0 / 0</div>
+                    </div>
+
+                    <div class="kpi">
+                        <div class="label">
+                            <span>Session length</span>
+                            <span class="mono small" id="sessionP50"
+                                >p50 --</span
+                            >
+                        </div>
+                        <div class="value" id="sessionAvg">--</div>
+                    </div>
+                </div>
+
+                <div class="kpiRow">
+                    <div class="kpi">
+                        <div class="label">
+                            <span>Segment req/s</span>
+                            <span class="mono small" id="segWindow">--</span>
+                        </div>
+                        <div class="value" id="segPerSec">0.00</div>
+                    </div>
+
+                    <div class="kpi">
+                        <div class="label">
+                            <span>Playlist req/s</span>
+                            <span class="mono small" id="playlistWindow"
+                                >--</span
+                            >
+                        </div>
+                        <div class="value" id="m3u8PerSec">0.00</div>
+                    </div>
+
+                    <div class="kpi">
+                        <div class="label">
+                            <span>HLS error rate</span>
+                            <span class="mono small" id="hlsErrorsNote"
+                                >4xx/5xx</span
+                            >
+                        </div>
+                        <div class="value" id="hlsErrorRate">0.0%</div>
+                    </div>
+
+                    <div class="kpi">
+                        <div class="label">
+                            <span>Live latency (est)</span>
+                            <span class="mono small" id="latencyNote"
+                                >seconds</span
+                            >
+                        </div>
+                        <div class="value" id="liveLatency">--</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid">
+                <div class="card span-6">
+                    <div class="row">
+                        <div>
+                            <div class="subtle">Stream</div>
+                            <div class="mono" id="hlsUrl">
+                                https://openradio.live/hls/live.m3u8
+                            </div>
+                        </div>
+                    </div>
+                    <div style="height: 10px"></div>
+                    <div class="row">
+                        <div>
+                            <div class="subtle">PL Age (&lt;4s 🮱)</div>
+                            <div class="mono" id="playlistAge">--</div>
+                        </div>
+                        <div>
+                            <div class="subtle">Segment success</div>
+                            <div class="mono" id="segmentSuccess">--</div>
+                        </div>
+                        <div>
+                            <div class="subtle">PL success</div>
+                            <div class="mono" id="playlistSuccess">--</div>
+                        </div>
+                    </div>
+                    <div style="height: 10px"></div>
+                    <div class="subtle">
+                        Ingest status comes from playlist freshness. Listener
+                        counts are unique segment requests in the time window.
+                    </div>
+                </div>
+
+                <div class="card span-6">
+                    <div class="row">
+                        <div>
+                            <div class="subtle">Dashboard uptime</div>
+                            <div class="mono" id="uptime">0s</div>
+                        </div>
+                        <div>
+                            <div class="subtle">Server time</div>
+                            <div class="mono" id="serverTime">--</div>
+                        </div>
+                    </div>
+                    <div style="height: 10px"></div>
+                    <div class="row">
+                        <div>
+                            <div class="subtle">Log coverage (1m)</div>
+                            <div class="mono" id="coverageShort">--</div>
+                        </div>
+                        <div>
+                            <div class="subtle">Window</div>
+                            <div class="mono" id="windowInfo">--</div>
+                        </div>
+                    </div>
+                    <div style="height: 10px"></div>
+                    <div class="subtle"></div>
+                </div>
+
+                <div class="card span-6">
+                    <div class="subtle">Clients (1m window)</div>
+                    <div style="height: 8px"></div>
+                    <div class="clientList" id="clientCats"></div>
+                    <div style="height: 10px"></div>
+                    <div class="subtle">Top user agents</div>
+                    <div style="height: 8px"></div>
+                    <div class="clientList" id="clientAgents"></div>
+                </div>
+
+                <div class="card span-12">
+                    <div class="sparkWrap">
+                        <div class="sparkCard">
+                            <div class="sparkTitle">
+                                <span>Listeners graph (history)</span>
+                                <span class="mono small" id="histInfo">--</span>
+                            </div>
+                            <canvas
+                                id="sparkListeners"
+                                width="1000"
+                                height="160"
+                            ></canvas>
+                        </div>
+
+                        <div class="sparkCard">
+                            <div class="sparkTitle">
+                                <span>Segment req/s (history)</span>
+                                <span class="mono small" id="histInfo2"
+                                    >--</span
+                                >
+                            </div>
+                            <canvas
+                                id="sparkSeg"
+                                width="1000"
+                                height="160"
+                            ></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer">
+                <div></div>
+                <div class="mono"></div>
+            </div>
+        </div>
+
+        <script>
+            (() => {
+                const REFRESH_MS = 2000;
+                const MAX_POINTS = 240; // ~8 minutes at 2s interval
+                const startAt = Date.now();
+
+                const el = (id) => document.getElementById(id);
+
+                const dot = el("dot");
+                const liveText = el("liveText");
+                const errorBox = el("errorBox");
+
+                const listenersNowEl = el("listenersNow");
+                const listeners5mEl = el("listeners5m");
+                const listenersDeltaEl = el("listenersDelta");
+                const sessionAvgEl = el("sessionAvg");
+                const sessionP50El = el("sessionP50");
+                const newReturningEl = el("newReturning");
+
+                const segPerSecEl = el("segPerSec");
+                const m3u8PerSecEl = el("m3u8PerSec");
+                const hlsErrorRateEl = el("hlsErrorRate");
+                const liveLatencyEl = el("liveLatency");
+                const segWindowEl = el("segWindow");
+                const playlistWindowEl = el("playlistWindow");
+                const hlsErrorsNoteEl = el("hlsErrorsNote");
+                const latencyNoteEl = el("latencyNote");
+
+                const playlistAgeEl = el("playlistAge");
+                const segmentSuccessEl = el("segmentSuccess");
+                const playlistSuccessEl = el("playlistSuccess");
+                const coverageShortEl = el("coverageShort");
+                const windowInfoEl = el("windowInfo");
+
+                const hlsUrlEl = el("hlsUrl");
+                const lastUpdateEl = el("lastUpdate");
+                const uptimeEl = el("uptime");
+                const serverTimeEl = el("serverTime");
+                const refreshMsEl = el("refreshMs");
+                const histInfoEl = el("histInfo");
+                const histInfo2El = el("histInfo2");
+                const clientCatsEl = el("clientCats");
+                const clientAgentsEl = el("clientAgents");
+
+                const btnPause = el("btnPause");
+                const btnClear = el("btnClear");
+
+                const canvasListeners = el("sparkListeners");
+                const canvasSeg = el("sparkSeg");
+                const ctxL = canvasListeners.getContext("2d");
+                const ctxS = canvasSeg.getContext("2d");
+
+                refreshMsEl.textContent = String(REFRESH_MS);
+
+                let running = true;
+                let timer = null;
+
+                // history arrays
+                const histListeners = [];
+                const histSeg = [];
+
+                function setLive(isLive) {
+                    dot.classList.toggle("ok", isLive);
+                    liveText.textContent = isLive ? "Live" : "Offline";
+                }
+
+                function setError(msg) {
+                    if (!msg) {
+                        errorBox.classList.remove("show");
+                        errorBox.textContent = "";
+                        return;
+                    }
+                    errorBox.classList.add("show");
+                    errorBox.textContent = msg;
+                }
+
+                function fmt2(n) {
+                    if (!Number.isFinite(n)) return "--";
+                    return n.toFixed(2);
+                }
+
+                function fmtInt(n) {
+                    if (!Number.isFinite(n)) return "--";
+                    return String(Math.round(n));
+                }
+
+                function fmtPct(n) {
+                    if (!Number.isFinite(n)) return "--";
+                    return `${(n * 100).toFixed(1)}%`;
+                }
+
+                function fmtSeconds(n) {
+                    if (!Number.isFinite(n)) return "--";
+                    const s = Math.round(n);
+                    if (s < 60) return `${s}s`;
+                    const m = Math.floor(s / 60);
+                    const rs = s % 60;
+                    if (m < 60) return `${m}m ${rs}s`;
+                    const h = Math.floor(m / 60);
+                    const rm = m % 60;
+                    return `${h}h ${rm}m`;
+                }
+
+                function humanUptime(ms) {
+                    const s = Math.floor(ms / 1000);
+                    const m = Math.floor(s / 60);
+                    const h = Math.floor(m / 60);
+                    if (h > 0) return `${h}h ${m % 60}m ${s % 60}s`;
+                    if (m > 0) return `${m}m ${s % 60}s`;
+                    return `${s}s`;
+                }
+
+                function pushLimited(arr, val) {
+                    arr.push(val);
+                    while (arr.length > MAX_POINTS) arr.shift();
+                }
+
+                function computeMinMax(arr) {
+                    let min = Infinity,
+                        max = -Infinity;
+                    for (const v of arr) {
+                        if (!Number.isFinite(v)) continue;
+                        if (v < min) min = v;
+                        if (v > max) max = v;
+                    }
+                    if (min === Infinity) return { min: 0, max: 1 };
+                    if (min === max) return { min: min - 1, max: max + 1 };
+                    return { min, max };
+                }
+
+                function drawSpark(ctx, canvas, values) {
+                    const w = canvas.width;
+                    const h = canvas.height;
+                    ctx.clearRect(0, 0, w, h);
+
+                    // background grid (subtle)
+                    ctx.globalAlpha = 1;
+                    ctx.strokeStyle = "rgba(255,255,255,0.06)";
+                    ctx.lineWidth = 1;
+
+                    const gridY = 4;
+                    for (let i = 1; i < gridY; i++) {
+                        const y = (h * i) / gridY;
+                        ctx.beginPath();
+                        ctx.moveTo(0, y);
+                        ctx.lineTo(w, y);
+                        ctx.stroke();
+                    }
+
+                    // line
+                    const { min, max } = computeMinMax(values);
+                    const n = values.length;
+                    if (n < 2) return;
+
+                    const padX = 10;
+                    const padY = 10;
+                    const innerW = w - padX * 2;
+                    const innerH = h - padY * 2;
+
+                    const xFor = (i) => padX + (innerW * i) / (n - 1);
+                    const yFor = (v) => {
+                        const t = (v - min) / (max - min);
+                        return padY + innerH * (1 - t);
+                    };
+
+                    ctx.strokeStyle = "rgba(234,234,240,0.92)";
+                    ctx.lineWidth = 2;
+                    ctx.lineJoin = "round";
+                    ctx.lineCap = "round";
+
+                    ctx.beginPath();
+                    for (let i = 0; i < n; i++) {
+                        const v = values[i];
+                        const x = xFor(i);
+                        const y = yFor(Number.isFinite(v) ? v : min);
+                        if (i === 0) ctx.moveTo(x, y);
+                        else ctx.lineTo(x, y);
+                    }
+                    ctx.stroke();
+
+                    // last point marker
+                    const last = values[n - 1];
+                    if (Number.isFinite(last)) {
+                        const lx = xFor(n - 1);
+                        const ly = yFor(last);
+                        ctx.fillStyle = "rgba(53,208,127,0.95)";
+                        ctx.beginPath();
+                        ctx.arc(lx, ly, 4, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+
+                    // min/max labels
+                    ctx.fillStyle = "rgba(234,234,240,0.55)";
+                    ctx.font =
+                        "12px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, Courier New, monospace";
+                    ctx.fillText(`${min.toFixed(1)}`, 10, h - 8);
+                    ctx.fillText(`${max.toFixed(1)}`, 10, 18);
+                }
+
+                function renderList(container, items, emptyLabel) {
+                    container.innerHTML = "";
+                    if (!items || items.length === 0) {
+                        const row = document.createElement("div");
+                        row.className = "clientItem";
+                        const left = document.createElement("span");
+                        left.textContent = emptyLabel;
+                        const right = document.createElement("span");
+                        right.textContent = "--";
+                        row.appendChild(left);
+                        row.appendChild(right);
+                        container.appendChild(row);
+                        return;
+                    }
+                    for (const item of items) {
+                        const row = document.createElement("div");
+                        row.className = "clientItem";
+                        const left = document.createElement("span");
+                        left.textContent = item.label || "Unknown";
+                        const right = document.createElement("span");
+                        right.textContent = String(item.count ?? 0);
+                        row.appendChild(left);
+                        row.appendChild(right);
+                        container.appendChild(row);
+                    }
+                }
+
+                async function fetchStats() {
+                    const res = await fetch("/api/stats", {
+                        cache: "no-store",
+                    });
+                    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                    return await res.json();
+                }
+
+                function updateUI(data) {
+                    const now = new Date();
+
+                    const ingestUp = !!data?.stream?.ingest_up;
+                    const playlistAge = data?.stream?.playlist_age_seconds;
+                    const windowS = data?.stream?.window_seconds ?? 60;
+                    const longWindowS =
+                        data?.stream?.long_window_seconds ?? 300;
+
+                    const listenersNow = data?.listeners?.active_short ?? 0;
+                    const listeners5m = data?.listeners?.active_long ?? 0;
+                    const delta = data?.listeners?.delta_short;
+                    const deltaPct = data?.listeners?.delta_short_pct;
+
+                    const newCount = data?.listeners?.new_short ?? 0;
+                    const returningCount =
+                        data?.listeners?.returning_short ?? 0;
+
+                    const sessAvg = data?.listeners?.session?.avg_seconds;
+                    const sessP50 = data?.listeners?.session?.p50_seconds;
+
+                    const segPerSec = data?.traffic?.segment?.per_sec ?? 0;
+                    const m3u8PerSec = data?.traffic?.playlist?.per_sec ?? 0;
+                    const segSuccess = data?.traffic?.segment?.success_rate;
+                    const plSuccess = data?.traffic?.playlist?.success_rate;
+
+                    const err4xx = data?.traffic?.errors?.total_4xx ?? 0;
+                    const err5xx = data?.traffic?.errors?.total_5xx ?? 0;
+                    const errRate =
+                        (data?.traffic?.errors?.rate_4xx ?? 0) +
+                        (data?.traffic?.errors?.rate_5xx ?? 0);
+
+                    const liveLatency = data?.qos?.live_latency_seconds_est;
+
+                    const coverageRatio = data?.windows?.short?.coverage_ratio;
+
+                    setLive(ingestUp);
+
+                    hlsUrlEl.textContent =
+                        data?.stream?.hls_url ||
+                        "https://openradio.live/hls/live.m3u8";
+                    segWindowEl.textContent = `${windowS}s window`;
+                    playlistWindowEl.textContent = `${windowS}s window`;
+                    windowInfoEl.textContent = `${windowS}s / ${longWindowS}s`;
+
+                    // KPIs
+                    listenersNowEl.textContent = fmtInt(listenersNow);
+                    listeners5mEl.textContent = fmtInt(listeners5m);
+                    newReturningEl.textContent = `${fmtInt(newCount)} / ${fmtInt(returningCount)}`;
+
+                    if (delta == null) {
+                        listenersDeltaEl.textContent = "--";
+                    } else {
+                        const signed = delta > 0 ? `+${delta}` : `${delta}`;
+                        if (Number.isFinite(deltaPct)) {
+                            listenersDeltaEl.textContent = `${signed} (${Math.round(deltaPct * 100)}%)`;
+                        } else {
+                            listenersDeltaEl.textContent = signed;
+                        }
+                    }
+
+                    sessionAvgEl.textContent = fmtSeconds(sessAvg);
+                    sessionP50El.textContent = `p50 ${fmtSeconds(sessP50)}`;
+
+                    segPerSecEl.textContent = fmt2(segPerSec);
+                    m3u8PerSecEl.textContent = fmt2(m3u8PerSec);
+                    hlsErrorRateEl.textContent = fmtPct(errRate);
+                    hlsErrorsNoteEl.textContent = `${err4xx}/${err5xx}`;
+                    liveLatencyEl.textContent = fmtSeconds(liveLatency);
+                    latencyNoteEl.textContent = "seconds";
+
+                    playlistAgeEl.textContent = fmtSeconds(playlistAge);
+                    segmentSuccessEl.textContent =
+                        segSuccess == null ? "--" : fmtPct(segSuccess);
+                    playlistSuccessEl.textContent =
+                        plSuccess == null ? "--" : fmtPct(plSuccess);
+
+                    coverageShortEl.textContent =
+                        coverageRatio == null
+                            ? "--"
+                            : `${Math.round(coverageRatio * 100)}%`;
+
+                    // history + sparklines
+                    pushLimited(histListeners, Number(listenersNow));
+                    pushLimited(histSeg, Number(segPerSec));
+
+                    drawSpark(ctxL, canvasListeners, histListeners);
+                    drawSpark(ctxS, canvasSeg, histSeg);
+
+                    histInfoEl.textContent = `${histListeners.length} pts | ${windowS}s`;
+                    histInfo2El.textContent = `${histSeg.length} pts | ${windowS}s`;
+
+                    renderList(
+                        clientCatsEl,
+                        data?.clients?.top_categories,
+                        "No clients yet",
+                    );
+                    renderList(
+                        clientAgentsEl,
+                        data?.clients?.top_agents,
+                        "No agents yet",
+                    );
+
+                    // times
+                    lastUpdateEl.textContent = now.toLocaleTimeString();
+                    serverTimeEl.textContent = data?.server_time_unix
+                        ? new Date(
+                              data.server_time_unix * 1000,
+                          ).toLocaleTimeString()
+                        : "--";
+
+                    uptimeEl.textContent = humanUptime(Date.now() - startAt);
+                }
+
+                async function tick() {
+                    try {
+                        setError("");
+                        const data = await fetchStats();
+                        updateUI(data);
+                    } catch (e) {
+                        setLive(false);
+                        setError(`Stats error: ${String(e?.message || e)}`);
+                    }
+                }
+
+                function start() {
+                    if (timer) clearInterval(timer);
+                    timer = setInterval(tick, REFRESH_MS);
+                    tick();
+                }
+
+                function stop() {
+                    if (timer) clearInterval(timer);
+                    timer = null;
+                }
+
+                btnPause.addEventListener("click", () => {
+                    running = !running;
+                    btnPause.textContent = running ? "Pause" : "Resume";
+                    if (running) start();
+                    else stop();
+                });
+
+                btnClear.addEventListener("click", () => {
+                    histListeners.length = 0;
+                    histSeg.length = 0;
+                    drawSpark(ctxL, canvasListeners, histListeners);
+                    drawSpark(ctxS, canvasSeg, histSeg);
+                });
+
+                start();
+            })();
+        </script>
+    </body>
+</html>

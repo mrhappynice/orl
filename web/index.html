@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>OpenRadio Live</title>
+        <meta
+            name="description"
+            content="OpenRadio Live PWA. Listen to the live stream, see status, and connect with the community."
+        />
+        <meta name="theme-color" content="#0f172a" />
+        <link rel="manifest" href="/manifest.webmanifest" />
+        <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Fraunces:opsz,wght@9..144,400;600&display=swap"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="/styles.css" />
+    </head>
+    <body>
+        <div class="grain"></div>
+        <main class="page">
+            <header class="hero">
+                <div class="brand">
+                    <div class="logo">ORL</div>
+                    <div class="brand-text">
+                        <p class="kicker">Community radio</p>
+                        <h1>OpenRadio Live</h1>
+                    </div>
+                </div>
+                <div class="hero-actions">
+                    <a class="btn" href="/dashboard/">Open Dashboard</a>
+                </div>
+            </header>
+
+            <section class="card player">
+                <div class="player-head">
+                    <h2>Live Stream</h2>
+                    <div class="status" id="statusDot">
+                        <span class="dot"></span>
+                        <span id="statusText">Checking status...</span>
+                    </div>
+                </div>
+                <div class="audio-shell">
+                    <audio
+                        id="audio"
+                        class="player-audio"
+                        controls
+                        preload="none"
+                    ></audio>
+                </div>
+                <div class="player-actions">
+                    <button id="playBtn" class="btn primary">
+                        Listen live
+                    </button>
+                    <button id="stopBtn" class="btn ghost">Stop</button>
+                </div>
+                <p class="hint">
+                    Stream URL:
+                    <code>https://openradio.live/hls/live.m3u8</code>
+                </p>
+            </section>
+
+            <section class="card project-details">
+                <div class="project-copy">
+                    <p class="eyebrow">OpenRadio Live Project</p>
+                    <h2>Built for community storytellers.</h2>
+                    <p>
+                        OpenRadio Live is a lightweight broadcasting stack that
+                        lets anyone run a station with minimal hardware. It
+                        combines a low-latency HLS stream, a terminal DJ tool,
+                        and simple workflows for mixing a playlist with mic and
+                        desktop audio.
+                    </p>
+                    <p>
+                        The project is open source and designed for local
+                        voices: share updates, host live conversations, and keep
+                        communities connected without heavy infrastructure.
+                    </p>
+                </div>
+                <div class="project-list">
+                    <div class="pill">Open source &amp; minimal setup</div>
+                    <div class="pill">TUI DJ + playlist control</div>
+                    <div class="pill">Mic + desktop mix support</div>
+                    <div class="pill">Community-first broadcasting</div>
+                </div>
+            </section>
+
+            <section class="grid">
+                <article class="card">
+                    <h3>Community Focus</h3>
+                    <p>---</p>
+                    <p>
+                        ORL is a project to provide a voice to everyone. Contact
+                        us and tell us your story and of your community. Share
+                        your story, highlight local events, and keep people
+                        informed with events around you and you feel about your
+                        world.
+                    </p>
+                </article>
+                <article class="card">
+                    <h3>Connect</h3>
+                    <p>---</p>
+                    <ul class="links">
+                        <li>
+                            <a href="https://openradio.live" rel="noopener"
+                                >Website</a
+                            >
+                        </li>
+                        <li>
+                            <a href="mailto:hello@openradio.live">Contact</a>
+                            <p></p>
+                        </li>
+                    </ul>
+                </article>
+                <article class="card">
+                    <h3>Open Source/Resources</h3>
+                    <p>---</p>
+                    <ul class="links">
+                        <li>
+                            <a href="https://os.mhn.lol" rel="noopener"
+                                >MHNOS</a
+                            >
+                        </li>
+                        <li>
+                            <a href="https://tools.mhn.lol" rel="noopener"
+                                >The Tool Menu</a
+                            >
+                        </li>
+                    </ul>
+                </article>
+            </section>
+
+            <footer class="footer">
+                <p>OpenRadio Live. Built for the community.</p>
+            </footer>
+        </main>
+
+        <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.15/dist/hls.min.js"></script>
+        <script src="/app.js"></script>
+    </body>
+</html>

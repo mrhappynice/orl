@@ -1,0 +1,17 @@
+{
+  "name": "OpenRadio Live",
+  "short_name": "OpenRadio",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f8f4ef",
+  "theme_color": "#0f172a",
+  "description": "Listen to OpenRadio Live and stay connected to the community.",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
