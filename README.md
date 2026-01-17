@@ -83,6 +83,8 @@ Defaults:
 * Stats API: [http://localhost:8090/api/stats](http://localhost:8090/api/stats)
 * SRT ingest: UDP port 9000
 
+See `set-nginx.md` for proxy insructions for host Nginx setup on VPS etc.
+
 ---
 
 ## Sending Audio
