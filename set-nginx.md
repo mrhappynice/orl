@@ -1,4 +1,4 @@
-# HTTP ONLY - see below for HTTPS/SLL
+# HTTP ONLY - see below for HTTPS/SSL
 
 Install nginx if needed: 
 
