@@ -73,8 +73,22 @@ No embedded analytics scripts.
 
 ## Getting It Running
 
-Build and start everything:
+#### Quick Start - on VPS 🏁
+```bash
+curl -fsSL https://gitlab.com/mrhappynice/orl/-/raw/main/install.sh | sudo bash -s -- IP_ADDRESS_HERE
+```
+Put your public IP from your VPS. 
+Installs Docker, Nginx, and ORL then runs the server.   
+Be sure to compose down and change passphrase in .env file after testing connection. 
 
+---
+
+#### Build and start everything:  
+Download:  
+ ```
+ git clone https://gitlab.com/mrhappynice/orl.git && cd orl
+ ```
+Set passphrase and config in .env then:
 ```
 docker compose up -d --build
 ```
