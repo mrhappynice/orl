@@ -66,6 +66,9 @@ No embedded analytics scripts.
 * `streamer/`
   Local tools for sending audio to the server.
 
+* `streamer/audio`  
+  Directory for auto-dj sound files
+
 ---
 
 ## Getting It Running
@@ -104,6 +107,7 @@ The `streamer/` folder includes:
 
 These tools are optional.
 Any SRT-capable sender will work. e.g.: OBS Studio, mobile apps, etc.
+For auto-dj on the server, copy files to /opt/orl/streamer/audio if using the install.sh script.
 
 ---
 
