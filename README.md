@@ -192,9 +192,9 @@ See `set-domains.md` for notes on Nginx proxy and certbot setup
 
 ## License
 
-Personal use.
-Use it.
-Fork it.
+Personal use.  
+Use it.  
+Fork it.  
 Build something better on top of it.
 
 
