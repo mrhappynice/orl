@@ -119,6 +119,12 @@ The `streamer/` folder includes:
 * a Python playlist streamer
 * interactive TUI stream app
 
+Put the IP address(or domain name) of your server in front of port 9000 below, 
+Stream URL: 
+```
+srt://IP_ADDRESS_HERE:9000?mode=caller&transtype=live&streamid=live&passphrase=PASSWORD-HERE&pbkeylen=32
+```
+
 These tools are optional.
 Any SRT-capable sender will work. e.g.: OBS Studio, mobile apps, etc.
 For auto-dj on the server, copy files to /opt/orl/streamer/audio if using the install.sh script.
