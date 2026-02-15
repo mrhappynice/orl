@@ -10,7 +10,7 @@ DOCKER_KEYRING_DIR="/etc/apt/keyrings"
 DOCKER_KEYRING="${DOCKER_KEYRING_DIR}/docker.asc"
 DOCKER_SOURCES="/etc/apt/sources.list.d/docker.sources"
 
-ORL_REPO_URL="https://gitlab.com/mrhappynice/orl.git"
+ORL_REPO_URL="https://github.com/mrhappynice/orl.git"
 ORL_DIR="/opt/orl"
 
 # health/wait settings
