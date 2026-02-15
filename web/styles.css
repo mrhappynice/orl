@@ -221,6 +221,29 @@ audio::-webkit-media-controls-time-remaining-display {
   align-items: center;
 }
 
+.chat-section {
+  display: grid;
+  gap: 14px;
+}
+
+.chat-head h2 {
+  margin: 8px 0 0;
+}
+
+.chat-embed-wrapper {
+  width: 100%;
+  min-height: 420px;
+  height: min(68vh, 560px);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.chat-embed-wrapper > script {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
 .project-copy h2 {
   margin: 8px 0 12px;
 }
@@ -295,5 +318,9 @@ audio::-webkit-media-controls-time-remaining-display {
   .project-details {
     grid-template-columns: 1fr;
   }
-}
 
+  .chat-embed-wrapper {
+    min-height: 360px;
+    height: 62vh;
+  }
+}
