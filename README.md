@@ -75,7 +75,7 @@ No embedded analytics scripts.
 
 #### Quick Start - on VPS 🏁
 ```bash
-curl -fsSL https://gitlab.com/mrhappynice/orl/-/raw/main/install.sh | sudo bash -s -- IP_ADDRESS_HERE
+curl -fsSL https://github.com/mrhappynice/orl/raw/refs/heads/main/install.sh | sudo bash -s -- IP_ADDRESS_HERE
 ```
 Put your public IP from your VPS. 
 Installs Docker, Nginx, and ORL then runs the server.   
